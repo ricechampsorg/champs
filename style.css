@@ -20,7 +20,12 @@ nav a{text-decoration:none;color:var(--muted)}
 nav a:hover{color:var(--head)}
 nav a.pill{background:var(--indigo);color:#fff;padding:8px 18px;border-radius:999px;font-weight:600}
 nav a.pill:hover{background:var(--pink);color:#fff}
-@media(max-width:600px){nav a:not(.pill){display:none}}
+@media(max-width:600px){
+header.nav{position:static}
+header.nav .wrap{height:auto;flex-wrap:wrap;justify-content:center;gap:6px 16px;padding-top:10px;padding-bottom:10px}
+nav{width:100%;justify-content:center;gap:18px;font-size:14px}
+nav a.pill{padding:6px 16px}
+}
 .hero{background:#d3e8f3;color:#232a63;border-radius:32px;margin:20px auto 0;max-width:1080px;padding:40px 24px 44px;text-align:center}
 .hero img{width:min(240px,60vw);height:auto;display:block;margin:0 auto 8px}
 .hero h1{font-size:clamp(28px,5vw,50px);line-height:1.15;font-weight:800;letter-spacing:-.02em;color:#3b44ab;margin:14px auto 16px;max-width:820px}
