@@ -12,6 +12,17 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<style>
+/* Sticky footer: footer sits at the bottom of the viewport even on short pages */
+body{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
+body>*{flex-shrink:0}
+body>main{flex:1 0 auto}
+/* Closed state: hide the hero and center the closed card horizontally and vertically */
+body.is-closed>main{display:flex;align-items:center;justify-content:center}
+body.is-closed>main>.wrap{width:100%}
+body.is-closed .hero{display:none}
+body.is-closed #closed{margin-left:auto;margin-right:auto}
+</style>
 </head>
 <body>
 <div class="stripe"></div>
@@ -132,13 +143,19 @@ function isClosed(){return Date.now()>=DEADLINE}
 function closeApp(){
   form.style.display='none';
   document.getElementById('thanks').classList.remove('on');
-  document.getElementById('heroChips').style.display='none';
-  document.getElementById('heroSub').style.display='none';
-  document.getElementById('heroTitle').textContent='Applications Closed';
   closedBox.classList.add('on');
+  document.body.classList.add('is-closed');
+  window.scrollTo(0,0);
 }
-if(isClosed())closeApp();
-else setInterval(function(){if(isClosed())closeApp()},30000);
+function check(){if(isClosed())closeApp()}
+check();
+if(!isClosed()){
+  setInterval(check,15000);
+  /* Background tabs throttle timers, so also re-check the moment someone returns to the tab */
+  document.addEventListener('visibilitychange',check);
+  window.addEventListener('focus',check);
+  window.addEventListener('pageshow',check);
+}
 
 function words(s){s=s.trim();return s?s.split(/\s+/).length:0}
 function val(id){return document.getElementById(id).value.trim()}
