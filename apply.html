@@ -22,9 +22,9 @@
 <main>
 <div class="wrap">
 <div class="hero small">
-<h1>Rice CHAMPs Founding Cohort Application</h1>
-<div class="chips" style="margin:0 0 14px"><span class="chip">Due October 15</span><span class="chip">Interviews October 20</span><span class="chip">Decisions October 25</span></div>
-<p class="sub">Takes about 10 minutes. Volunteer at Children’s Memorial Hermann, TIRR Memorial Hermann, or rank both.</p>
+<h1 id="heroTitle">Rice CHAMPs Founding Cohort Application</h1>
+<div class="chips" id="heroChips" style="margin:0 0 14px"><span class="chip">Due October 15</span><span class="chip">Interviews October 20</span><span class="chip">Decisions October 25</span></div>
+<p class="sub" id="heroSub">Takes about 10 minutes. Volunteer at Children’s Memorial Hermann, TIRR Memorial Hermann, or rank both.</p>
 </div>
 
 <section class="formwrap">
@@ -99,6 +99,11 @@
 <h2>Thanks for applying!</h2>
 <p>We’ll be in touch about interviews, which take place on October 20.<br>Questions? <span class="ph">ricechampsorg@gmail.com</span></p>
 </div>
+
+<div class="thanks" id="closed" role="status">
+<h2>Applications are closed</h2>
+<p>The founding cohort application closed at 11:59 PM CT on October 15. Thank you to everyone who applied!<br>Questions? <span class="ph">ricechampsorg@gmail.com</span></p>
+</div>
 </section>
 </div>
 </main>
@@ -119,6 +124,22 @@ var E={name:"entry.2005620554",email:"entry.1045781291",year:"entry.1065046570",
 var form=document.getElementById('app'),boxes=[].slice.call(form.querySelectorAll('input[name=role]')),
     radios=[].slice.call(form.querySelectorAll('input[name=program]')),
     err=document.getElementById('roleerr'),perr=document.getElementById('progerr'),serr=document.getElementById('submiterr'),btn=document.getElementById('sendbtn');
+
+/* Application deadline: 12:00 AM Central Time on October 16, 2026 (CDT, UTC-5). */
+var DEADLINE=new Date('2026-10-16T00:00:00-05:00').getTime();
+var closedBox=document.getElementById('closed');
+function isClosed(){return Date.now()>=DEADLINE}
+function closeApp(){
+  form.style.display='none';
+  document.getElementById('thanks').classList.remove('on');
+  document.getElementById('heroChips').style.display='none';
+  document.getElementById('heroSub').style.display='none';
+  document.getElementById('heroTitle').textContent='Applications Closed';
+  closedBox.classList.add('on');
+}
+if(isClosed())closeApp();
+else setInterval(function(){if(isClosed())closeApp()},30000);
+
 function words(s){s=s.trim();return s?s.split(/\s+/).length:0}
 function val(id){return document.getElementById(id).value.trim()}
 function picked(k){return boxes.some(function(b){return b.dataset.k===k&&b.checked})}
@@ -150,6 +171,7 @@ sync();
 
 form.addEventListener('submit',function(e){
   e.preventDefault();serr.textContent='';
+  if(isClosed()){closeApp();return;}
   var chosen=boxes.filter(function(b){return b.checked});
   if(!chosen.length){err.textContent='Select at least one role to continue.';document.getElementById('roles').scrollIntoView({behavior:'smooth',block:'center'});return;}
   if(picked('vol')&&!program()){perr.textContent='Choose a volunteer program, or rank both.';document.getElementById('programs').scrollIntoView({behavior:'smooth',block:'center'});return;}
